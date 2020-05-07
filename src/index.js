@@ -120,8 +120,9 @@ const main = async () => {
   post_to_twitter(info)
 }
 
-const job = new cron.CronJob("0 */2 * * *", () => {
-  main()
-})
+// const job = new cron.CronJob("0 */2 * * *", () => {
+//   main()
+// })
 
-job.start()
+// job.start()
+main()
