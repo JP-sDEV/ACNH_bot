@@ -5,12 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --exec babel-node src/index.js",
-    "start": "npm run build && node ./build/bin/www",
-    "build": "npm run clean && npm run babel-build",
-    "babel-build": "babel -d ./build ./src -s",
-    "clean": "rm -rf ./build && mkdir ./build",
-    "heroku-postbuild": "npm install && npm run build"
+    "dev": "nodemon --exec babel-node src/index.js"
   },
   "author": "",
   "license": "ISC",
