@@ -9,9 +9,8 @@
     "clean": "rmdir /S /Q build && mkdir build",
     "build-babel": "babel -d ./build ./src -s",
     "build": "npm run clean && npm run build-babel",
-    "start": "npm run build && node ./build/index.js",
-    "heroku-postbuild": "npm run build && node ./build/index.js"
-  },
+    "start": "npm run build && node ./build/index.js"
+    },
   "author": "",
   "license": "ISC",
   "devDependencies": {
