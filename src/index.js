@@ -1,3 +1,6 @@
+import "core-js/stable";
+import "regenerator-runtime/runtime";
+
 import fs from "fs"
 import path from "path"
 import axios from "axios"
@@ -5,19 +8,20 @@ import cron from "cron"
 import {TwitterClient, RedditClient} from "./utility/auth"
 
 const init = () => {
-    const path = "./src/temp_image"
-    if (!fs.existsSync(path)) {
-      fs.mkdirSync(path)
-      fs.writeFileSync(`${path}/info.json`, "{}", (err) => {
+    const image_path = path.join(__dirname, "temp_image")
+    if (!fs.existsSync(image_path)) {
+      fs.mkdirSync(image_path)
+      fs.writeFileSync(`${image_path}/info.json`, "{}", (err) => {
         if (err) throw err;
       })
-      fs.writeFileSync(`${path}/a.jpg`, null, (err) => {
+      fs.writeFileSync(`${image_path}/a.jpg`, null, (err) => {
         if (err) throw err;
       })
     }
 }
 
 const save_image = async (url, post_id) => {
+    init()
     const response = await axios.get(url, {responseType: "stream"})
     const image_path = path.join(__dirname, "temp_image", `${post_id}.jpg`)
     const writer = fs.createWriteStream(image_path)
@@ -104,7 +108,6 @@ const get_file = () => {
       image_path: null
     }
     var path_name = path.join(__dirname, "temp_image")
-    var x
     info.title =  temp_image_data.title
     fs.readdirSync(path_name).forEach((file) => {
       if(path.extname(file) == ".jpg") {
@@ -117,8 +120,8 @@ const get_file = () => {
 const main = async () => {
   try {
     init()
-    const info = await fetch_image()
-    var info = get_file()
+    await fetch_image()
+    const info = get_file()
     post_to_twitter(info)
   } 
   catch (err) {
@@ -132,3 +135,4 @@ const job = new cron.CronJob("0 */2 * * *", () => {
 })
 
 job.start()
+console.log("up and running \nno issues")

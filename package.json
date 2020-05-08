@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --ignore src/temp_image/info.json --exec babel-node src/index.js"
+    "dev": "nodemon --ignore src/temp_image/info.json --exec babel-node src/index.js",
+    "clean": "rmdir /Q /S build && mkdir build",
+    "build-babel": "babel src --out-dir build",
+    "build": "npm run clean && npm run build-babel",
+    "start": "npm run build && node ./build/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -20,8 +24,10 @@
     "axios": "^0.19.2",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
+    "core-js": "^3.6.5",
     "cron": "^1.8.2",
     "dotenv": "^8.2.0",
+    "regenerator-runtime": "^0.13.5",
     "snoowrap": "^1.21.0",
     "twit": "^2.2.11",
     "twitter-lite": "^0.10.1-0"
