@@ -31,7 +31,7 @@ const save_image = async (url, post_id) => {
 
 const delete_image = (file_path) => {
   if (path.extname(file_path) == ".jpg") {
-    fs.unlinkSync(file_path, (err)=> {
+    fs.unlink(file_path, (err)=> {
       if (err) throw err
     }) 
   }
@@ -41,7 +41,6 @@ const write_info = (incoming_file) => {
   const info_path = path.join(__dirname, "temp_image/info.json")
   fs.writeFileSync(info_path, JSON.stringify(incoming_file), (err) => {
     if (err) throw err
-    return 
   })
 }
 
@@ -67,13 +66,12 @@ const post_to_twitter = (tweet_info) => {
 }
 
 const fetch_image = async () => {
-  var incoming_posts
-  await RedditClient.getSubreddit('animalcrossingmeme').getNew({time: "day"}).then(r => incoming_posts= r)
-  const image_path = path.join(__dirname, "temp_image/")
-
-  var full_path;
-  fs.readdir(image_path, (err, files) => {
-    if (err) throw err
+  try {
+    var incoming_posts
+    incoming_posts = await RedditClient.getSubreddit('animalcrossingmeme').getNew({time: "day"})
+    const image_path = path.join(__dirname, "temp_image/")
+    var full_path;
+    const files = fs.readdirSync(image_path)
     for (const dir_file of files) {
       if (path.extname(dir_file) == ".jpg"){
         full_path = `${image_path}${dir_file}`
@@ -85,13 +83,17 @@ const fetch_image = async () => {
       const file = incoming_posts[i]
       if (file.id !== filename && file.is_video == false) {
         delete_image(full_path)
-        save_image(file.url, file.id)
         write_info(file)
+        await save_image(file.url, file.id)
         break
       }
       continue
     }
-  })
+  }
+  catch (err) {
+    console.log(err)
+  }
+
 }
 
 const get_file = () => {
@@ -102,27 +104,31 @@ const get_file = () => {
       image_path: null
     }
     var path_name = path.join(__dirname, "temp_image")
-    var files = fs.readdirSync(path_name)
+    var x
     info.title =  temp_image_data.title
-      for (let i = 0; i < files.length-1; i++) {
-        let file = files[i]
-        if (path.extname(file) == ".jpg") {
-        info.image_path = (`${path_name}/${file}`)
-        }
+    fs.readdirSync(path_name).forEach((file) => {
+      if(path.extname(file) == ".jpg") {
+        info.image_path = `${path_name}/${file}`
       }
+    })
     return(info)
 }
 
 const main = async () => {
-  init()
-  await fetch_image()
-  var info = get_file()
-  post_to_twitter(info)
+  try {
+    init()
+    const info = await fetch_image()
+    var info = get_file()
+    post_to_twitter(info)
+  } 
+  catch (err) {
+    console.log(err)
+  }
+ 
 }
 
-// const job = new cron.CronJob("0 */2 * * *", () => {
-//   main()
-// })
+const job = new cron.CronJob("0 */2 * * *", () => {
+  main()
+})
 
-// job.start()
-main()
+job.start()
