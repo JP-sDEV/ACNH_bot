@@ -100,7 +100,7 @@ const fetch_image = async () => {
 }
 
 const get_file = () => {
-    const info_path = "./src/temp_image/info.json"
+    const info_path = path.join(__dirname, "temp_image/info.json")
     const temp_image_data = JSON.parse(fs.readFileSync(info_path, "utf8"));
     var info = {
       title: null,
