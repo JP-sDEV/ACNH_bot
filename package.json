@@ -10,7 +10,7 @@
     "build-babel": "babel src --out-dir build",
     "build": "npm run clean && npm run build-babel",
     "start": "npm run build && node ./build/index.js",
-    "heroku-postbuild": "npm install && npm start"
+    "heroku-postbuild": "npm start"
   },
   "author": "",
   "license": "ISC",
