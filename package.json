@@ -26,11 +26,9 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "core-js": "^3.6.5",
-    "cron": "^1.8.2",
     "dotenv": "^8.2.0",
     "regenerator-runtime": "^0.13.5",
     "snoowrap": "^1.21.0",
-    "twit": "^2.2.11",
-    "twitter-lite": "^0.10.1-0"
+    "twit": "^2.2.11"
   }
 }

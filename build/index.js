@@ -274,6 +274,7 @@ var main = /*#__PURE__*/function () {
 
 var job = new _cron["default"].CronJob("0 */2 * * *", function () {
   main();
-});
-job.start();
+}); // job.start()
+
+main();
 console.log("up and running \nno issues");

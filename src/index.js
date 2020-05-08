@@ -4,7 +4,6 @@ import "regenerator-runtime/runtime";
 import fs from "fs"
 import path from "path"
 import axios from "axios"
-import cron from "cron"
 import {TwitterClient, RedditClient} from "./utility/auth"
 
 const init = () => {
@@ -130,9 +129,4 @@ const main = async () => {
  
 }
 
-const job = new cron.CronJob("0 */2 * * *", () => {
-  main()
-})
-
-job.start()
-console.log("up and running \nno issues")
+main()
