@@ -1,9 +1,7 @@
 import Twitter from "twit"
 import snoowrap from "snoowrap"
 require("dotenv").config()
-
 const PE = process.env
-
 const TwitterClient = new Twitter({
     // subdomain: "api", // "api" is the default (change for other subdomains)
     // version: "1.1", // version "1.1" is the default (change for other subdomains)

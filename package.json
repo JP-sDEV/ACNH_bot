@@ -5,21 +5,33 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+<<<<<<< HEAD
     "start": "nodemon --exec babel-node src/index.js",
     "prod-start": "node src/index.js",
     "heroku-deploy": "NPM_CONFIG_PRODUCTION=false npm install "
+=======
+    "dev": "nodemon --ignore src/temp_image/info.json --exec babel-node src/index.js"
+>>>>>>> master
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+<<<<<<< HEAD
+=======
+    "@babel/cli": "^7.8.4",
+>>>>>>> master
     "@babel/core": "^7.9.6",
     "@babel/node": "^7.8.7",
-    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-env": "^7.9.6",
     "nodemon": "^2.0.3"
   },
   "dependencies": {
     "axios": "^0.19.2",
     "babel-cli": "^6.26.0",
+<<<<<<< HEAD
+=======
+    "babel-preset-env": "^1.7.0",
+>>>>>>> master
     "cron": "^1.8.2",
     "dotenv": "^8.2.0",
     "snoowrap": "^1.21.0",
