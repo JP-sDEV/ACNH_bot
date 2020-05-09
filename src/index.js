@@ -4,11 +4,11 @@ import "regenerator-runtime/runtime";
 import fs from "fs"
 import path from "path"
 import axios from "axios"
-import cron from "cron"
 import {TwitterClient, RedditClient} from "./utility/auth"
 
 const init = () => {
-    const image_path = path.join(__dirname, "temp_image")
+    const image_path = ("./src/temp_image")
+
     if (!fs.existsSync(image_path)) {
       fs.mkdirSync(image_path)
       fs.writeFileSync(`${image_path}/info.json`, "{}", (err) => {
@@ -21,9 +21,9 @@ const init = () => {
 }
 
 const save_image = async (url, post_id) => {
-    init()
     const response = await axios.get(url, {responseType: "stream"})
-    const image_path = path.join(__dirname, "temp_image", `${post_id}.jpg`)
+    const image_path =(`./src/temp_image/${post_id}.jpg`)
+
     const writer = fs.createWriteStream(image_path)
     response.data.pipe(writer)
 
@@ -42,7 +42,7 @@ const delete_image = (file_path) => {
 }
 
 const write_info = (incoming_file) => {
-  const info_path = path.join(__dirname, "temp_image/info.json")
+  const info_path =("./src/temp_image/info.json")
   fs.writeFileSync(info_path, JSON.stringify(incoming_file), (err) => {
     if (err) throw err
   })
@@ -73,7 +73,7 @@ const fetch_image = async () => {
   try {
     var incoming_posts
     incoming_posts = await RedditClient.getSubreddit('animalcrossingmeme').getNew({time: "day"})
-    const image_path = path.join(__dirname, "temp_image/")
+    const image_path = ("./src/temp_image/")
     var full_path;
     const files = fs.readdirSync(image_path)
     for (const dir_file of files) {
@@ -101,13 +101,13 @@ const fetch_image = async () => {
 }
 
 const get_file = () => {
-    const info_path = "./src/temp_image/info.json"
-    const temp_image_data = JSON.parse(fs.readFileSync(info_path, "utf8"));
+  const info_path = ("./src/temp_image/info.json")
+  const temp_image_data = JSON.parse(fs.readFileSync(info_path, "utf8"));
     var info = {
       title: null,
       image_path: null
     }
-    var path_name = path.join(__dirname, "temp_image")
+    var path_name = ("./src/temp_image")
     info.title =  temp_image_data.title
     fs.readdirSync(path_name).forEach((file) => {
       if(path.extname(file) == ".jpg") {
@@ -120,8 +120,10 @@ const get_file = () => {
 const main = async () => {
   try {
     init()
+    console.log("before: ", get_file())
     await fetch_image()
     const info = get_file()
+    console.log("after: ", get_file())
     post_to_twitter(info)
   } 
   catch (err) {
@@ -129,10 +131,4 @@ const main = async () => {
   }
  
 }
-
-const job = new cron.CronJob("0 */2 * * *", () => {
-  main()
-})
-
-job.start()
-console.log("up and running \nno issues")
+main()
