@@ -1,4 +1,4 @@
-import "core-js/stable";
+// import "core-js/stable";
 import "regenerator-runtime/runtime";
 
 import fs from "fs"
@@ -33,9 +33,9 @@ const save_image = async (url, post_id) => {
       })
   }
 
-const delete_image = (file_path) => {
+const delete_image = async (file_path) => {
   if (path.extname(file_path) == ".jpg") {
-    fs.unlink(file_path, (err)=> {
+    await fs.unlinkSync(file_path, (err)=> {
       if (err) throw err
     }) 
   }
@@ -87,7 +87,7 @@ const fetch_image = async () => {
       const file = incoming_posts[i]
       if (file.id !== filename && file.is_video == false) {
         delete_image(full_path)
-        await write_info(file)
+        write_info(file)
         await save_image(file.url, file.id)
         break
       }
@@ -97,7 +97,6 @@ const fetch_image = async () => {
   catch (err) {
     console.log(err)
   }
-
 }
 
 const get_file = () => {
@@ -124,7 +123,7 @@ const main = async () => {
     await fetch_image()
     console.log("after: ", get_file())
     const info = get_file()
-    post_to_twitter(info)
+    // post_to_twitter(info)
   } 
   catch (err) {
     console.log(err)
