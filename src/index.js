@@ -88,7 +88,7 @@ const fetch_image = async () => {
       if (file.id !== filename && file.is_video == false) {
         delete_image(full_path)
         write_info(file)
-        await save_image(file.url, file.id)
+        save_image(file.url, file.id)
         break
       }
       continue
