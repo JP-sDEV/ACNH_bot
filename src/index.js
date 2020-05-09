@@ -22,7 +22,7 @@ const init = () => {
 
 const save_image = async (url, post_id) => {
     const response = await axios.get(url, {responseType: "stream"})
-    const image_path =(`../src/temp_image/${post_id}.jpg`)
+    const image_path =(`./src/temp_image/${post_id}.jpg`)
 
     const writer = fs.createWriteStream(image_path)
     response.data.pipe(writer)
@@ -42,7 +42,7 @@ const delete_image = (file_path) => {
 }
 
 const write_info = (incoming_file) => {
-  const info_path =("../src/temp_image/info.json")
+  const info_path =("./src/temp_image/info.json")
   fs.writeFileSync(info_path, JSON.stringify(incoming_file), (err) => {
     if (err) throw err
   })
@@ -73,7 +73,7 @@ const fetch_image = async () => {
   try {
     var incoming_posts
     incoming_posts = await RedditClient.getSubreddit('animalcrossingmeme').getNew({time: "day"})
-    const image_path = ("../src/temp_image/")
+    const image_path = ("./src/temp_image/")
     var full_path;
     const files = fs.readdirSync(image_path)
     for (const dir_file of files) {
@@ -101,7 +101,7 @@ const fetch_image = async () => {
 }
 
 const get_file = () => {
-  const info_path = ("../src/temp_image/info.json")
+  const info_path = ("./src/temp_image/info.json")
   const temp_image_data = JSON.parse(fs.readFileSync(info_path, "utf8"));
     var info = {
       title: null,
