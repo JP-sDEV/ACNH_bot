@@ -83,13 +83,31 @@ var delete_image = function delete_image(file_path) {
   }
 };
 
-var write_info = function write_info(incoming_file) {
-  var info_path = "./src/temp_image/info.json";
+var write_info = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(incoming_file) {
+    var info_path;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            info_path = "./src/temp_image/info.json";
+            _context2.next = 3;
+            return _fs["default"].writeFileSync(info_path, JSON.stringify(incoming_file), function (err) {
+              if (err) throw err;
+            });
 
-  _fs["default"].writeFileSync(info_path, JSON.stringify(incoming_file), function (err) {
-    if (err) throw err;
-  });
-};
+          case 3:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+
+  return function write_info(_x3) {
+    return _ref2.apply(this, arguments);
+  };
+}();
 
 var post_to_twitter = function post_to_twitter(tweet_info) {
   var b64content = _fs["default"].readFileSync(tweet_info.image_path, {
@@ -125,21 +143,21 @@ var post_to_twitter = function post_to_twitter(tweet_info) {
 };
 
 var fetch_image = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
     var incoming_posts, image_path, full_path, files, _iterator, _step, dir_file, filename, i, file;
 
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
-        switch (_context2.prev = _context2.next) {
+        switch (_context3.prev = _context3.next) {
           case 0:
-            _context2.prev = 0;
-            _context2.next = 3;
+            _context3.prev = 0;
+            _context3.next = 3;
             return _auth.RedditClient.getSubreddit('animalcrossingmeme').getNew({
               time: "day"
             });
 
           case 3:
-            incoming_posts = _context2.sent;
+            incoming_posts = _context3.sent;
             image_path = "./src/temp_image/";
             files = _fs["default"].readdirSync(image_path);
             _iterator = _createForOfIteratorHelper(files);
@@ -163,52 +181,55 @@ var fetch_image = /*#__PURE__*/function () {
 
           case 10:
             if (!(i < incoming_posts.length - 1)) {
-              _context2.next = 22;
+              _context3.next = 23;
               break;
             }
 
             file = incoming_posts[i];
 
             if (!(file.id !== filename && file.is_video == false)) {
-              _context2.next = 18;
+              _context3.next = 19;
               break;
             }
 
             delete_image(full_path);
-            write_info(file);
-            _context2.next = 17;
+            _context3.next = 16;
+            return write_info(file);
+
+          case 16:
+            _context3.next = 18;
             return save_image(file.url, file.id);
 
-          case 17:
-            return _context2.abrupt("break", 22);
-
           case 18:
-            return _context2.abrupt("continue", 19);
+            return _context3.abrupt("break", 23);
 
           case 19:
+            return _context3.abrupt("continue", 20);
+
+          case 20:
             i++;
-            _context2.next = 10;
+            _context3.next = 10;
             break;
 
-          case 22:
-            _context2.next = 27;
+          case 23:
+            _context3.next = 28;
             break;
 
-          case 24:
-            _context2.prev = 24;
-            _context2.t0 = _context2["catch"](0);
-            console.log(_context2.t0);
+          case 25:
+            _context3.prev = 25;
+            _context3.t0 = _context3["catch"](0);
+            console.log(_context3.t0);
 
-          case 27:
+          case 28:
           case "end":
-            return _context2.stop();
+            return _context3.stop();
         }
       }
-    }, _callee2, null, [[0, 24]]);
+    }, _callee3, null, [[0, 25]]);
   }));
 
   return function fetch_image() {
-    return _ref2.apply(this, arguments);
+    return _ref3.apply(this, arguments);
   };
 }();
 
@@ -232,40 +253,40 @@ var get_file = function get_file() {
 };
 
 var main = /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
     var info;
-    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+    return regeneratorRuntime.wrap(function _callee4$(_context4) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context4.prev = _context4.next) {
           case 0:
-            _context3.prev = 0;
+            _context4.prev = 0;
             init();
             console.log("before: ", get_file());
-            _context3.next = 5;
+            _context4.next = 5;
             return fetch_image();
 
           case 5:
             console.log("after: ", get_file());
             info = get_file();
             post_to_twitter(info);
-            _context3.next = 13;
+            _context4.next = 13;
             break;
 
           case 10:
-            _context3.prev = 10;
-            _context3.t0 = _context3["catch"](0);
-            console.log(_context3.t0);
+            _context4.prev = 10;
+            _context4.t0 = _context4["catch"](0);
+            console.log(_context4.t0);
 
           case 13:
           case "end":
-            return _context3.stop();
+            return _context4.stop();
         }
       }
-    }, _callee3, null, [[0, 10]]);
+    }, _callee4, null, [[0, 10]]);
   }));
 
   return function main() {
-    return _ref3.apply(this, arguments);
+    return _ref4.apply(this, arguments);
   };
 }();
 

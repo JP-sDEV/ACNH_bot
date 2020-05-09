@@ -41,9 +41,9 @@ const delete_image = (file_path) => {
   }
 }
 
-const write_info = (incoming_file) => {
+const write_info = async (incoming_file) => {
   const info_path =("./src/temp_image/info.json")
-  fs.writeFileSync(info_path, JSON.stringify(incoming_file), (err) => {
+  await fs.writeFileSync(info_path, JSON.stringify(incoming_file), (err) => {
     if (err) throw err
   })
 }
@@ -87,7 +87,7 @@ const fetch_image = async () => {
       const file = incoming_posts[i]
       if (file.id !== filename && file.is_video == false) {
         delete_image(full_path)
-        write_info(file)
+        await write_info(file)
         await save_image(file.url, file.id)
         break
       }
