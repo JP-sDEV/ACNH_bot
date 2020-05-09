@@ -120,7 +120,9 @@ const get_file = () => {
 const main = async () => {
   try {
     init()
+    console.log("before: ", get_file())
     await fetch_image()
+    console.log("after: ", get_file())
     const info = get_file()
     post_to_twitter(info)
   } 
