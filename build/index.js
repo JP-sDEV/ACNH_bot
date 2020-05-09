@@ -255,9 +255,9 @@ var main = function () {
             return fetch_image();
 
           case 5:
+            console.log("after: ", get_file());
             info = get_file();
 
-            console.log("after: ", get_file());
             post_to_twitter(info);
             _context3.next = 13;
             break;
@@ -281,3 +281,4 @@ var main = function () {
   };
 }();
 main();
+//# sourceMappingURL=index.js.map
