@@ -33,9 +33,9 @@ const save_image = async (url, post_id) => {
       })
   }
 
-const delete_image = async (file_path) => {
+const delete_image = (file_path) => {
   if (path.extname(file_path) == ".jpg") {
-    await fs.unlinkSync(file_path, (err)=> {
+    fs.unlinkSync(file_path, (err)=> {
       if (err) throw err
     }) 
   }
@@ -81,14 +81,14 @@ const fetch_image = async () => {
         full_path = `${image_path}${dir_file}`
       }
     }
-    await delete_image(full_path)
     const filename = path.basename(full_path, path.extname(full_path))
 
     for (let i = 0; i < incoming_posts.length-1; i++) {
       const file = incoming_posts[i]
       if (file.id !== filename && file.is_video == false) {
+        delete_image(full_path)
         write_info(file)
-        save_image(file.url, file.id)
+        await save_image(file.url, file.id)
         break
       }
       continue
@@ -107,14 +107,18 @@ const get_file = () => {
   const info_path = ("./src/temp_image/info.json")
   const temp_image_data = JSON.parse(fs.readFileSync(info_path, "utf8"));
 
-  var path_name = ("./src/temp_image")
+  // const path_name = path.join(__dirname, "../src/temp_image")
   info.title =  temp_image_data.title
+
+  const path_name = ("./src/temp_image")
+  // const image_path = (`${path_name}/${temp_image_data.id}.jpg`)
+
   info.image_path = (`${path_name}/${temp_image_data.id}.jpg`)
-  // info.image_path = path.relative(process.cwd(), `${path_name}/${temp_image_data.id}.jpg`)
-  // console.log(info.image_path)
+
   // fs.readdirSync(path_name).forEach((file) => {
   //   console.log(file)
   //   if(path.extname(file) == ".jpg") {
+  //     console.log(typeof file)
   //     info.image_path = `${path_name}/${file}`
   //   }
   // })
@@ -129,7 +133,6 @@ const main = async () => {
     console.log("after: ", get_file())
     const info = get_file()
     post_to_twitter(info)
-    console.log(info)
   } 
   catch (err) {
     console.log(err)
@@ -137,4 +140,3 @@ const main = async () => {
 }
 
 main()
-// console.log(get_file())

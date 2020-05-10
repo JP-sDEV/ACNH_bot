@@ -73,19 +73,24 @@ var save_image = /*#__PURE__*/function () {
   };
 }();
 
-var delete_image = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(file_path) {
+var delete_image = function delete_image(file_path) {
+  if (_path["default"].extname(file_path) == ".jpg") {
+    _fs["default"].unlinkSync(file_path, function (err) {
+      if (err) throw err;
+    });
+  }
+};
+
+var write_info = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(incoming_file) {
+    var info_path;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            if (!(_path["default"].extname(file_path) == ".jpg")) {
-              _context2.next = 3;
-              break;
-            }
-
+            info_path = "./src/temp_image/info.json";
             _context2.next = 3;
-            return _fs["default"].unlinkSync(file_path, function (err) {
+            return _fs["default"].writeFileSync(info_path, JSON.stringify(incoming_file), function (err) {
               if (err) throw err;
             });
 
@@ -97,34 +102,8 @@ var delete_image = /*#__PURE__*/function () {
     }, _callee2);
   }));
 
-  return function delete_image(_x3) {
+  return function write_info(_x3) {
     return _ref2.apply(this, arguments);
-  };
-}();
-
-var write_info = /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(incoming_file) {
-    var info_path;
-    return regeneratorRuntime.wrap(function _callee3$(_context3) {
-      while (1) {
-        switch (_context3.prev = _context3.next) {
-          case 0:
-            info_path = "./src/temp_image/info.json";
-            _context3.next = 3;
-            return _fs["default"].writeFileSync(info_path, JSON.stringify(incoming_file), function (err) {
-              if (err) throw err;
-            });
-
-          case 3:
-          case "end":
-            return _context3.stop();
-        }
-      }
-    }, _callee3);
-  }));
-
-  return function write_info(_x4) {
-    return _ref3.apply(this, arguments);
   };
 }();
 
@@ -162,21 +141,21 @@ var post_to_twitter = function post_to_twitter(tweet_info) {
 };
 
 var fetch_image = /*#__PURE__*/function () {
-  var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
     var incoming_posts, image_path, full_path, files, _iterator, _step, dir_file, filename, i, file;
 
-    return regeneratorRuntime.wrap(function _callee4$(_context4) {
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
-        switch (_context4.prev = _context4.next) {
+        switch (_context3.prev = _context3.next) {
           case 0:
-            _context4.prev = 0;
-            _context4.next = 3;
+            _context3.prev = 0;
+            _context3.next = 3;
             return _auth.RedditClient.getSubreddit('animalcrossingmeme').getNew({
               time: "day"
             });
 
           case 3:
-            incoming_posts = _context4.sent;
+            incoming_posts = _context3.sent;
             image_path = "./src/temp_image/";
             files = _fs["default"].readdirSync(image_path);
             _iterator = _createForOfIteratorHelper(files);
@@ -195,57 +174,57 @@ var fetch_image = /*#__PURE__*/function () {
               _iterator.f();
             }
 
-            _context4.next = 10;
-            return delete_image(full_path);
-
-          case 10:
             filename = _path["default"].basename(full_path, _path["default"].extname(full_path));
             i = 0;
 
-          case 12:
+          case 10:
             if (!(i < incoming_posts.length - 1)) {
-              _context4.next = 22;
+              _context3.next = 22;
               break;
             }
 
             file = incoming_posts[i];
 
             if (!(file.id !== filename && file.is_video == false)) {
-              _context4.next = 18;
+              _context3.next = 18;
               break;
             }
 
+            delete_image(full_path);
             write_info(file);
-            save_image(file.url, file.id);
-            return _context4.abrupt("break", 22);
+            _context3.next = 17;
+            return save_image(file.url, file.id);
+
+          case 17:
+            return _context3.abrupt("break", 22);
 
           case 18:
-            return _context4.abrupt("continue", 19);
+            return _context3.abrupt("continue", 19);
 
           case 19:
             i++;
-            _context4.next = 12;
+            _context3.next = 10;
             break;
 
           case 22:
-            _context4.next = 27;
+            _context3.next = 27;
             break;
 
           case 24:
-            _context4.prev = 24;
-            _context4.t0 = _context4["catch"](0);
-            console.log(_context4.t0);
+            _context3.prev = 24;
+            _context3.t0 = _context3["catch"](0);
+            console.log(_context3.t0);
 
           case 27:
           case "end":
-            return _context4.stop();
+            return _context3.stop();
         }
       }
-    }, _callee4, null, [[0, 24]]);
+    }, _callee3, null, [[0, 24]]);
   }));
 
   return function fetch_image() {
-    return _ref4.apply(this, arguments);
+    return _ref3.apply(this, arguments);
   };
 }();
 
@@ -255,14 +234,15 @@ var get_file = function get_file() {
     image_path: null
   };
   var info_path = "./src/temp_image/info.json";
-  var temp_image_data = JSON.parse(_fs["default"].readFileSync(info_path, "utf8"));
-  var path_name = "./src/temp_image";
+  var temp_image_data = JSON.parse(_fs["default"].readFileSync(info_path, "utf8")); // const path_name = path.join(__dirname, "../src/temp_image")
+
   info.title = temp_image_data.title;
-  info.image_path = "".concat(path_name, "/").concat(temp_image_data.id, ".jpg"); // info.image_path = path.relative(process.cwd(), `${path_name}/${temp_image_data.id}.jpg`)
-  // console.log(info.image_path)
-  // fs.readdirSync(path_name).forEach((file) => {
+  var path_name = "./src/temp_image"; // const image_path = (`${path_name}/${temp_image_data.id}.jpg`)
+
+  info.image_path = "".concat(path_name, "/").concat(temp_image_data.id, ".jpg"); // fs.readdirSync(path_name).forEach((file) => {
   //   console.log(file)
   //   if(path.extname(file) == ".jpg") {
+  //     console.log(typeof file)
   //     info.image_path = `${path_name}/${file}`
   //   }
   // })
@@ -271,43 +251,43 @@ var get_file = function get_file() {
 };
 
 var main = /*#__PURE__*/function () {
-  var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
     var info;
-    return regeneratorRuntime.wrap(function _callee5$(_context5) {
+    return regeneratorRuntime.wrap(function _callee4$(_context4) {
       while (1) {
-        switch (_context5.prev = _context5.next) {
+        switch (_context4.prev = _context4.next) {
           case 0:
-            _context5.prev = 0;
+            _context4.prev = 0;
             init();
             console.log("before: ", get_file());
-            _context5.next = 5;
+            _context4.next = 5;
             return fetch_image();
 
           case 5:
             console.log("after: ", get_file());
             info = get_file();
             post_to_twitter(info);
-            console.log(info);
-            _context5.next = 14;
+            process.exit();
+            _context4.next = 14;
             break;
 
           case 11:
-            _context5.prev = 11;
-            _context5.t0 = _context5["catch"](0);
-            console.log(_context5.t0);
+            _context4.prev = 11;
+            _context4.t0 = _context4["catch"](0);
+            console.log(_context4.t0);
 
           case 14:
           case "end":
-            return _context5.stop();
+            return _context4.stop();
         }
       }
-    }, _callee5, null, [[0, 11]]);
+    }, _callee4, null, [[0, 11]]);
   }));
 
   return function main() {
-    return _ref5.apply(this, arguments);
+    return _ref4.apply(this, arguments);
   };
 }();
 
-main(); // console.log(get_file())
+main();
 //# sourceMappingURL=index.js.map
