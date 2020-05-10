@@ -195,10 +195,14 @@ var fetch_image = /*#__PURE__*/function () {
               _iterator.f();
             }
 
+            _context4.next = 10;
+            return delete_image(full_path);
+
+          case 10:
             filename = _path["default"].basename(full_path, _path["default"].extname(full_path));
             i = 0;
 
-          case 10:
+          case 12:
             if (!(i < incoming_posts.length - 1)) {
               _context4.next = 22;
               break;
@@ -211,12 +215,8 @@ var fetch_image = /*#__PURE__*/function () {
               break;
             }
 
-            delete_image(full_path);
             write_info(file);
-            _context4.next = 17;
-            return save_image(file.url, file.id);
-
-          case 17:
+            save_image(file.url, file.id);
             return _context4.abrupt("break", 22);
 
           case 18:
@@ -224,7 +224,7 @@ var fetch_image = /*#__PURE__*/function () {
 
           case 19:
             i++;
-            _context4.next = 10;
+            _context4.next = 12;
             break;
 
           case 22:
@@ -250,20 +250,22 @@ var fetch_image = /*#__PURE__*/function () {
 }();
 
 var get_file = function get_file() {
-  var info_path = "./src/temp_image/info.json";
-  var temp_image_data = JSON.parse(_fs["default"].readFileSync(info_path, "utf8"));
   var info = {
     title: null,
     image_path: null
   };
+  var info_path = "./src/temp_image/info.json";
+  var temp_image_data = JSON.parse(_fs["default"].readFileSync(info_path, "utf8"));
   var path_name = "./src/temp_image";
   info.title = temp_image_data.title;
-
-  _fs["default"].readdirSync(path_name).forEach(function (file) {
-    if (_path["default"].extname(file) == ".jpg") {
-      info.image_path = "".concat(path_name, "/").concat(file);
-    }
-  });
+  info.image_path = "".concat(path_name, "/").concat(temp_image_data.id, ".jpg"); // info.image_path = path.relative(process.cwd(), `${path_name}/${temp_image_data.id}.jpg`)
+  // console.log(info.image_path)
+  // fs.readdirSync(path_name).forEach((file) => {
+  //   console.log(file)
+  //   if(path.extname(file) == ".jpg") {
+  //     info.image_path = `${path_name}/${file}`
+  //   }
+  // })
 
   return info;
 };
@@ -283,22 +285,23 @@ var main = /*#__PURE__*/function () {
 
           case 5:
             console.log("after: ", get_file());
-            info = get_file(); // post_to_twitter(info)
-
-            _context5.next = 12;
+            info = get_file();
+            post_to_twitter(info);
+            console.log(info);
+            _context5.next = 14;
             break;
 
-          case 9:
-            _context5.prev = 9;
+          case 11:
+            _context5.prev = 11;
             _context5.t0 = _context5["catch"](0);
             console.log(_context5.t0);
 
-          case 12:
+          case 14:
           case "end":
             return _context5.stop();
         }
       }
-    }, _callee5, null, [[0, 9]]);
+    }, _callee5, null, [[0, 11]]);
   }));
 
   return function main() {
@@ -306,5 +309,5 @@ var main = /*#__PURE__*/function () {
   };
 }();
 
-main();
+main(); // console.log(get_file())
 //# sourceMappingURL=index.js.map

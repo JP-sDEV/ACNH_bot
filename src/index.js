@@ -81,14 +81,14 @@ const fetch_image = async () => {
         full_path = `${image_path}${dir_file}`
       }
     }
+    await delete_image(full_path)
     const filename = path.basename(full_path, path.extname(full_path))
 
     for (let i = 0; i < incoming_posts.length-1; i++) {
       const file = incoming_posts[i]
       if (file.id !== filename && file.is_video == false) {
-        delete_image(full_path)
         write_info(file)
-        await save_image(file.url, file.id)
+        save_image(file.url, file.id)
         break
       }
       continue
@@ -100,20 +100,25 @@ const fetch_image = async () => {
 }
 
 const get_file = () => {
+  var info = {
+    title: null,
+    image_path: null
+  }
   const info_path = ("./src/temp_image/info.json")
   const temp_image_data = JSON.parse(fs.readFileSync(info_path, "utf8"));
-    var info = {
-      title: null,
-      image_path: null
-    }
-    var path_name = ("./src/temp_image")
-    info.title =  temp_image_data.title
-    fs.readdirSync(path_name).forEach((file) => {
-      if(path.extname(file) == ".jpg") {
-        info.image_path = `${path_name}/${file}`
-      }
-    })
-    return(info)
+
+  var path_name = ("./src/temp_image")
+  info.title =  temp_image_data.title
+  info.image_path = (`${path_name}/${temp_image_data.id}.jpg`)
+  // info.image_path = path.relative(process.cwd(), `${path_name}/${temp_image_data.id}.jpg`)
+  // console.log(info.image_path)
+  // fs.readdirSync(path_name).forEach((file) => {
+  //   console.log(file)
+  //   if(path.extname(file) == ".jpg") {
+  //     info.image_path = `${path_name}/${file}`
+  //   }
+  // })
+  return(info)
 }
 
 const main = async () => {
@@ -123,10 +128,13 @@ const main = async () => {
     await fetch_image()
     console.log("after: ", get_file())
     const info = get_file()
-    // post_to_twitter(info)
+    post_to_twitter(info)
+    console.log(info)
   } 
   catch (err) {
     console.log(err)
   }
 }
+
 main()
+// console.log(get_file())
