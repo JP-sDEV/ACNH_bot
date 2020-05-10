@@ -1,4 +1,4 @@
-// import "core-js/stable";
+import "core-js/stable";
 import "regenerator-runtime/runtime";
 
 import fs from "fs"
@@ -105,23 +105,13 @@ const get_file = () => {
     image_path: null
   }
   const info_path = ("./src/temp_image/info.json")
+
   const temp_image_data = JSON.parse(fs.readFileSync(info_path, "utf8"));
-
-  // const path_name = path.join(__dirname, "../src/temp_image")
   info.title =  temp_image_data.title
-
+  
   const path_name = ("./src/temp_image")
-  // const image_path = (`${path_name}/${temp_image_data.id}.jpg`)
-
   info.image_path = (`${path_name}/${temp_image_data.id}.jpg`)
 
-  // fs.readdirSync(path_name).forEach((file) => {
-  //   console.log(file)
-  //   if(path.extname(file) == ".jpg") {
-  //     console.log(typeof file)
-  //     info.image_path = `${path_name}/${file}`
-  //   }
-  // })
   return(info)
 }
 
