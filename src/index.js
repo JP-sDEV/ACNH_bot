@@ -23,7 +23,7 @@ const get_info = async () => {  // returns info.json from AWS
 const get_new_posts = async () => { // script to renew info.json, and image on AWS
   try {
     var incoming_posts
-    incoming_posts = await RedditClient.getSubreddit('animalcrossingmeme').getNew({time: "day"})
+    incoming_posts = await RedditClient.getSubreddit('animalcrossingmeme').getTop({time: "hour"})
     const current_info = await get_info().then(data => JSON.parse(data.Body))
     for (let i = 0; i < incoming_posts.length-1; i++) {
       const post = incoming_posts[i]
