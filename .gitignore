@@ -1,4 +1,9 @@
 node_modules
+<<<<<<< HEAD
 src/temp_image
 build
 README.md
+=======
+build
+README.md
+>>>>>>> master
