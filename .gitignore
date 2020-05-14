@@ -1,5 +1,4 @@
 node_modules
-.env
-temp_image
+src/temp_image
 build
-lib
+README.md

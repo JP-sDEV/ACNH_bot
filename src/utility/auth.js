@@ -1,5 +1,6 @@
 import Twitter from "twit"
 import snoowrap from "snoowrap"
+const AWS = require("aws-sdk")
 require("dotenv").config()
 const PE = process.env
 const TwitterClient = new Twitter({
@@ -20,4 +21,10 @@ const TwitterClient = new Twitter({
   });
 
 
-export {TwitterClient, RedditClient}
+  const S3Client = new AWS.S3({
+    accessKeyId: PE.AWS_ACCESS_KEY_ID,
+    secretAccessKey: PE.AWS_SECRET_ACCESS_KEY,
+    Bucket: "acnh-bot"
+  });
+
+  export {TwitterClient, RedditClient, S3Client}
