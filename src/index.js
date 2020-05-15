@@ -29,7 +29,7 @@ const get_new_posts = async () => { // script to renew info.json, and image on A
       const post = incoming_posts[i]
       if (post.id !== current_info.id && post.is_video == false && post.media == null) {
         await delete_current_image(current_info.id)
-        write_new_info(post)
+        await write_new_info(post)
         save_new_image(post.id, post.url)
         break
       }
@@ -53,16 +53,23 @@ const save_new_image = async (image_id, image_url) => { // save locally and to u
     const writer = fs.createWriteStream(image_path)
     response.data.pipe(writer)
   
-    writer.on('finish', () => {
-  
-      const open_file = fs.readFileSync(image_path)
-      params.Body = open_file
-    
-      S3Client.upload(params, (data, err) => {
-        if(err) console.log(err)
-        console.log("IMAGE upload success")
-      })
+    new Promise ((resolve, reject) => {
+      resolve (writer.on('finish', () => {
+        console.log("swag")
+        const open_file = fs.readFileSync(image_path)
+        params.Body = open_file
+      
+        S3Client.upload(params, (data, err) => {
+          if(err) console.log(err)
+          console.log("IMAGE upload success")
+        })
+      }))
+
+      reject (writer.on('error', () => {
+        console.log("error")
+      }))
     })
+
   } 
   catch(err) {
     console.log(err)
@@ -72,30 +79,36 @@ const save_new_image = async (image_id, image_url) => { // save locally and to u
 
   const delete_current_image = async (image) => { // script to remove current image in AWS
     try{
-      const params = {
-        Bucket: "acnh-bot",
-        Key: `${image}.jpg`
+      if (fs.existsSync(`./src/temp_image/.${image}jpg`)) {
+        const params = {
+          Bucket: "acnh-bot",
+          Key: `${image}.jpg`
+        }
+      
+        await S3Client.deleteObject(params, (err) => {
+          if (err) console.log(err)
+      
+          console.log("CURRENT IMAGE delete success")
+        })
       }
-    
-      await S3Client.deleteObject(params, (err) => {
-        if (err) console.log(err)
-    
-        console.log("CURRENT IMAGE delete success")
-      })
+      else {
+        return
+      }
+     
     }
     catch(err) {
       console.log(err)
     }
   }
   
-  const write_new_info = (new_info) => { // script to upload info.json from local to AWS
+  const write_new_info = async (new_info) => { // script to upload info.json from local to AWS
     const params = {
       Bucket: "acnh-bot",
       Key: "info.json",
       Body: JSON.stringify(new_info)
     }
   
-    S3Client.upload(params, (data, err) => {
+    await S3Client.upload(params, (data, err) => {
       if(err) console.log(err)
       console.log("INFO.JSON upload success")
     })
