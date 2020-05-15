@@ -79,6 +79,7 @@ const save_new_image = async (image_id, image_url) => { // save locally and to u
 
   const delete_current_image = async (image) => { // script to remove current image in AWS
     try{
+      if (fs.existsSync(`./src/temp_image/.${image}jpg`)) {
         const params = {
           Bucket: "acnh-bot",
           Key: `${image}.jpg`
@@ -89,6 +90,11 @@ const save_new_image = async (image_id, image_url) => { // save locally and to u
       
           console.log("CURRENT IMAGE delete success")
         })
+      }
+      else {
+        return
+      }
+     
     }
     catch(err) {
       console.log(err)
