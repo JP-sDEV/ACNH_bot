@@ -15,7 +15,7 @@
 4. `npm run dev` - script to be used to run development settings
 
 # What is it?
-ACNH_bot, checks r/animalcrossingmeme every day at 12PM EST, and posts the top meme of that hour onto [Twitter](https://twitter.com/IsabelleBurner). 
+ACNH_bot, checks [r/animalcrossingmeme](https://www.reddit.com/r/animalcrossingmeme/) every day at 12PM EST, and posts the top meme of that hour onto [Twitter](https://twitter.com/IsabelleBurner). 
 
 # Technologies/Packages Used
 * nodejs
